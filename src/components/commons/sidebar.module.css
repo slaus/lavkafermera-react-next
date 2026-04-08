@@ -1,71 +1,90 @@
 ._ {
-    width: 280px;
-    height: calc(100vh - 100px);
-    background-color: #fff;
-    position: fixed;
-    transform: translateX(-280px);
-    transition: transform 0.3s ease 0.3s;
-    left: 0px;
-    top: 100px;
-    padding-top: 1.25rem;
-    padding-bottom: 1.25rem;
-    z-index: 3;
+    width           : 0;
+    /* background-color: #fff; */
+    position        : fixed;
+    transform       : translateX(280px);
+    transition      : all 0.3s ease 0.3s;
+    top             : 105px;
+    padding-top     : 1.25rem;
+    padding-bottom  : 1.25rem;
+    float           : left;
+    /* height          : 100%; */
+    overflow        : hidden;
+    opacity: 0;
+    z-index: 0;
 }
+
 ._.open {
     transform: translateX(0px);
+    width    : 280px;
+    opacity: 1;
+    z-index: 3;
 }
+
 .radiogroup {
-    display: flex;
+    display       : flex;
     flex-direction: column;
-    margin-top: 5px;
+    background-color: #fff;
+    border-radius: 5px;
+    overflow: hidden;
 }
 
 .btn {
-    border-radius: 0;
-    width: 100%;
-    display: flex;
-    appearance: none;
-    align-items: center;
-    justify-content: center;
-    transition: all .3s ease;
-    user-select: none;
-    position: relative;
-    white-space: nowrap;
-    line-height: 1.2;
-    outline: none;
-    height: 2.5rem;
-    min-width: 2.5rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    border-radius   : 0;
+    width           : 100%;
+    display         : flex;
+    appearance      : none;
+    align-items     : center;
+    justify-content : center;
+    transition      : all .3s ease .3s;
+    user-select     : none;
+    position        : relative;
+    white-space     : nowrap;
+    line-height     : 1.2;
+    outline         : none;
+    height          : 2.5rem;
+    min-width       : 2.5rem;
+    padding-left    : 1rem;
+    padding-right   : 1rem;
     background-color: #fff;
-    color: #192633;
-    border: 0;
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+    color           : #192633;
+    border          : 0;
+    padding-top     : 1.5rem;
+    padding-bottom  : 1.5rem;
 }
+
 .btn.active {
-    background-color: #dfe7ef;
+    background-color: #5e9923;
+    color           : #fff
 }
-.btn:hover {
-    background-color: #dfe7ef;
+
+.btn:hover:not(.active) {
+    background-color: #e4ffc8;
 }
+
 .item {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    gap: 20px;
-    font-weight: 600;
-    font-size: 1rem;
+    display       : flex;
+    align-items   : center;
+    width         : 100%;
+    gap           : 20px;
+    font-weight   : 600;
+    font-size     : 1rem;
     text-transform: capitalize;
 }
+
+.item svg {
+    width : 18px;
+    height: 18px;
+}
+
 .overlay {
-    position: fixed;
+    position        : fixed;
     background-color: rgba(0, 0, 0, 0.4);
-    left: 0px;
-    top: 0px;
-    width: 100vw;
-    height: 100vh;
-    z-index: 2;
-    opacity: 1;
-    transition: all .3s ease 1s;
+    left            : 0px;
+    top             : 0px;
+    width           : 100vw;
+    height          : 100vh;
+    z-index         : 2;
+    opacity         : 1;
+    transition      : all .3s ease 1s;
 }

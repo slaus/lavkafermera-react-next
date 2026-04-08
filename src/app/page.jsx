@@ -1,16 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
 import styles from "@/app/page.module.css";
-import Header from '@/components/commons/Header';
-import Sidebar from '@/components/commons/Sidebar';
+import Header from "@/components/commons/Header";
+import Sidebar from "@/components/commons/Sidebar";
 import Main from "@/components/commons/Main";
-import Footer from '@/components/commons/Footer';
+import Footer from "@/components/commons/Footer";
 import Alert from "@/components/ui/Alert";
 import MainContainer from "@/components/home/MainContainer";
 import Cart from "@/components/cart/Cart";
 import Search from "@/components/others/Search";
-import Head from 'next/head';
+import Head from "next/head";
 import { metadata } from "./metadata";
+import Wrapper from "@/components/commons/Wrapper";
 
 export default function Home() {
   const [showCart, setShowCart] = useState(false);
@@ -58,21 +59,24 @@ export default function Home() {
       </Head>
 
       <div className={styles.main}>
-        <Header page="home" setShowCart={setShowCart} setShowSearchBar={setShowSearchBar} showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
+        <Header
+          page="home"
+          setShowCart={setShowCart}
+          setShowSearchBar={setShowSearchBar}
+          showSidebar={showSidebar}
+          setShowSidebar={setShowSidebar}
+        />
 
-        {showSearchBar &&
-          <Search setShowSearchBar={setShowSearchBar} />
-        }
-
-        <Sidebar showSidebar={showSidebar} mobile={mobile} />
-        <Main>
-          <MainContainer showSidebar={showSidebar} />
-        </Main>
+        {showSearchBar && <Search setShowSearchBar={setShowSearchBar} />}
+        <Wrapper>
+          <Sidebar showSidebar={showSidebar} mobile={mobile} />
+          <Main>
+            <MainContainer showSidebar={showSidebar} />
+          </Main>
+        </Wrapper>
       </div>
 
-      {showCart &&
-        <Cart setShowCart={setShowCart} />
-      }
+      {showCart && <Cart setShowCart={setShowCart} />}
 
       <Footer />
       <Alert />

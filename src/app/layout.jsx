@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ["cyrillic"] });
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="uk" suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
         <AppProviders>
           {children}

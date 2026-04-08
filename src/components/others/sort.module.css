@@ -17,7 +17,7 @@
     font-size: 1rem;
     padding-left: 1rem;
     padding-right: 1rem;
-    background-color: #2d4052 !important;
+    background-color: #5e9923 !important;
     color: #fff;
     gap: 10px;
     margin-left: 10px;
@@ -55,11 +55,11 @@
   }
   
   .btn:hover {
-    background-color: #dadfdf;
+    background-color: #e4ffc8;
   }
   
   ._:hover .dropbtn {
-    background-color: #192633 !important;
+    background-color: #4c7c1b !important;
   }
   .icon {
     position: absolute;

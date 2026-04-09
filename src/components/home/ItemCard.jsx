@@ -20,13 +20,13 @@ const ItemsCard = ({ item }) => {
             <div className={styles._}>
                 {offerPrice && <div className={styles.sale}>Знижка</div>}
                 {item.new && <div className={styles.new}>Новинка</div>}
-                <div className={styles.img} onClick={openModal}>
-                    <img alt={title} title={title} src={`/images/${img}`} className={styles.pict} />
+                <div className={styles.img} onClick={() => img && openModal()}>
+                    <img alt={title} title={title} src={`/images/${img || 'no-photo.jpg'}`} className={styles.pict} />
                 </div>
                 <div className={styles.block}>
                     <div className={styles.prices}>
-                        <p className={styles.price}>{(offerPrice || price).toFixed(2)} грн.</p>
-                        {offerPrice && <p className={styles.old}>{price.toFixed(2)} грн.</p>}
+                        <p className={styles.price}>{(offerPrice || price).toFixed(0)} грн.</p>
+                        {offerPrice && <p className={styles.old}>{price.toFixed(0)} грн.</p>}
                     </div>
                     <p className={styles.title}>{title}</p>
                 </div>

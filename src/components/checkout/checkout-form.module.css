@@ -43,7 +43,7 @@
 .group {
     display   : flex;
     position  : relative;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
     position  : relative;
 }
 
@@ -120,7 +120,7 @@
     padding-right   : 1.5rem;
     background-color: #5e9923 !important;
     color           : #fff;
-    margin-top      : 1.5rem;
+    margin-top      : 1rem;
 }
 
 .confirm:disabled {

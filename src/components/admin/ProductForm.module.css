@@ -1,60 +1,165 @@
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+._ {
+    width           : calc(100% - 2rem);
+    height          : max-content;
+    background-color: rgb(255, 255, 255);
+    padding         : 1rem;
+    margin-left     : 1rem;
+    margin-right    : 1rem;
+    order           : 0;
+    margin-top      : 0;
 }
 
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+@media screen and (max-width: 767px) {
+    ._ {
+        max-width   : 500px;
+        margin-left : auto;
+        margin-right: auto;
+        order       : 2;
+    }
 }
 
-.field label {
-  font-weight: 500;
-}
-
-.field input {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.fieldCheckbox {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.uploading {
-  margin-left: 0.5rem;
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.currentImage {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.deleteImageBtn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2rem;
-  padding: 0;
-  line-height: 1;
+.title {
+    font-size    : 1.25rem;
+    line-height  : 1.25;
+    font-weight  : 700;
+    width        : 100%;
+    color        : #5e9923;
+    margin-bottom: 20px;
 }
 
 .actions {
-  display: flex;
-  gap: 1rem;
-  margin-top: 0.5rem;
+    display   : flex;
+    gap       : 1rem;
+    margin-top: 1rem;
 }
 
-.actions button {
-  padding: 0.5rem 1rem;
-  cursor: pointer;
+.checkbox {
+    display        : flex;
+    align-items    : center;
+    justify-content: center;
+    margin-top     : 1.5rem;
+    gap            : 10px;
+}
+
+.disabled .icon svg,
+.icon.gray svg {
+    color: #c0c0c0;
+    fill : #c0c0c0;
+}
+
+.icon {
+    display        : flex;
+    align-items    : center;
+    justify-content: center;
+    position       : absolute;
+    height         : 2.5rem;
+    width          : 2.5rem;
+    font-size      : 1rem;
+    top            : 0px;
+    z-index        : 1;
+    left           : 0px;
+}
+
+.icon svg {
+    color: #5e9923;
+}
+
+.input:disabled {
+    border-color: #c0c0c0;
+    cursor      : not-allowed;
+}
+
+.input::placeholder {
+    color: #c0c0c0;
+}
+
+.input:focus {
+    border-color: #4c7c1b;
+}
+
+.cancel {
+    background: #979797 !important;
+}
+
+.cancel:hover {
+    background: #838383 !important;
+}
+
+.delete {
+    background : #ff0019 !important;
+    padding    : 0 !important;
+    margin-left: 1rem;
+    height     : 22px !important;
+    width      : 22px !important;
+    min-width  : 22px !important;
+}
+
+.delete:hover {
+    background: #ce0015 !important;
+}
+
+.download {
+    width           : 100%;
+    display         : flex;
+    align-items     : center;
+    justify-content : space-between;
+    outline         : none;
+    font-size       : 1rem;
+    padding-left    : .5rem;
+    padding-right   : 1rem;
+    height          : 2.5rem;
+    border-radius   : 0.25rem;
+    border          : 2px solid #5e9923;
+    background-color: #ffffff;
+}
+
+.group {
+    display   : flex;
+    position  : relative;
+    margin-top: 1rem;
+    position  : relative;
+}
+
+.input {
+    width           : 100%;
+    display         : flex;
+    align-items     : center;
+    position        : relative;
+    transition      : 0.2s;
+    outline         : none;
+    font-size       : 1rem;
+    padding-left    : 2.5rem;
+    padding-right   : 1rem;
+    height          : 2.5rem;
+    line-height     : 2.5rem;
+    border-radius   : 0.25rem;
+    border          : 2px solid #5e9923;
+    background-color: #ffffff;
+}
+
+.input:disabled {
+    background-color: #f5f5f5;
+    cursor          : not-allowed;
+}
+
+.label {
+    font-weight: 500;
+}
+
+.fileInput {
+    width: 100%;
+}
+
+.uploading {
+    font-size  : 0.85rem;
+    margin-left: 0.5rem;
+    color      : #c0c0c0;
+}
+
+.currentImage {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex: 1;
+    font-size: .9rem;
 }

@@ -6,7 +6,6 @@
 
 .main button {
   cursor: pointer;
-  background: transparent;
   border-width: 0;
 }
 .open {

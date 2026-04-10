@@ -74,4 +74,9 @@
 
 .img {
     cursor: pointer;
+    transition: all .3s ease .3s;
+}
+
+.img:hover {
+    color: #5e9923
 }

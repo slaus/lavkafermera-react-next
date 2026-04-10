@@ -1,6 +1,19 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./ProductForm.module.css";
+import Button from "@/components/ui/Button";
+import { useAlert } from '@/context/AppContext';
+import {
+  BiSave,
+  BiTrash,
+  BiIdCard,
+  BiRename,
+  BiMoney,
+  BiCategory,
+  BiPackage,
+  BiMoneyWithdraw,
+} from "react-icons/bi";
+import SliderCheckbox from "@/components/ui/SliderCheckbox";
 
 export default function ProductForm({
   editingId,
@@ -12,130 +25,168 @@ export default function ProductForm({
   onImageUpload,
 }) {
   const [loading, setLoading] = useState(false);
+  const [checked, setChecked] = useState(formData.new);
+  const { showAlert } = useAlert();
+
+  useEffect(() => {
+    setChecked(formData.new);
+  }, [formData.new]);
+
+  const toggleChecked = () => {
+    const newChecked = !checked;
+    setChecked(newChecked);
+    setFormData({ ...formData, new: newChecked });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     await onSave();
+    showAlert("Товар успішно додано!", "success");
     setLoading(false);
   };
 
-  return (
-    <form onSubmit={handleSubmit} className={styles.form}>
-      <h2>{editingId === "new" ? "Новий товар" : "Редагування товару"}</h2>
+  const handleFieldChange = (field, value) => {
+    setFormData({ ...formData, [field]: value });
+  };
 
-      <div className={styles.field}>
-        <label>ID (тільки для нового):</label>
+  return (
+    <form onSubmit={handleSubmit} className={styles._}>
+      <h2 className={styles.title}>
+        {editingId === "new" ? "Додати новий товар" : "Редагування товару"}
+      </h2>
+
+      <div className={styles.checkbox}>
+        <div className={styles.label}>Новинка?</div>
+        <SliderCheckbox checked={checked} toggleChecked={toggleChecked} />
+      </div>
+      
+      <div className={styles.group}>
+        <div className={`${styles.icon} ${editingId !== "new" ? styles.gray : ""}`}>
+          <BiIdCard size={20} />
+        </div>
         <input
           type="text"
+          name="id"
+          placeholder="ID товару (унікальний)"
+          className={styles.input}
           value={formData.id}
-          onChange={(e) => setFormData({ ...formData, id: e.target.value })}
+          onChange={(e) => handleFieldChange("id", e.target.value)}
           disabled={editingId !== "new"}
           required
         />
       </div>
 
-      <div className={styles.field}>
-        <label>Назва:</label>
+      <div className={styles.group}>
+        <div className={styles.icon}>
+          <BiRename size={20} />
+        </div>
         <input
           type="text"
+          name="title"
+          placeholder="Назва товару"
+          className={styles.input}
           value={formData.title}
-          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+          onChange={(e) => handleFieldChange("title", e.target.value)}
           required
         />
       </div>
 
-      <div className={styles.field}>
-        <label>Ціна (грн.):</label>
+      <div className={styles.group}>
+        <div className={styles.icon}>
+          <BiMoney size={20} />
+        </div>
         <input
           type="number"
+          name="price"
+          placeholder="Ціна (грн.)"
+          className={styles.input}
           value={formData.price}
           onChange={(e) =>
-            setFormData({ ...formData, price: +e.target.value })
+            handleFieldChange("price", e.target.valueAsNumber || 0)
           }
           required
         />
       </div>
 
-      <div className={styles.field}>
-        <label>Акційна ціна (грн., порожньо якщо ні):</label>
+      <div className={styles.group}>
+        <div className={styles.icon}>
+          <BiMoneyWithdraw size={20} />
+        </div>
         <input
           type="number"
+          name="offerPrice"
+          placeholder="Акційна ціна (грн.)"
+          className={styles.input}
           value={formData.offerPrice}
-          onChange={(e) =>
-            setFormData({ ...formData, offerPrice: e.target.value })
-          }
+          onChange={(e) => handleFieldChange("offerPrice", e.target.value)}
         />
       </div>
 
-      <div className={styles.fieldCheckbox}>
-        <label>
-          <input
-            type="checkbox"
-            checked={formData.new}
-            onChange={(e) =>
-              setFormData({ ...formData, new: e.target.checked })
-            }
-          />
-          Новинка
-        </label>
-      </div>
-
-      <div className={styles.field}>
-        <label>Залишок:</label>
+      <div className={styles.group}>
+        <div className={styles.icon}>
+          <BiPackage size={20} />
+        </div>
         <input
           type="number"
+          name="stock"
+          placeholder="Кількість на складі"
+          className={styles.input}
           value={formData.stock}
           onChange={(e) =>
-            setFormData({ ...formData, stock: +e.target.value })
+            handleFieldChange("stock", e.target.valueAsNumber || 0)
           }
-          required
         />
       </div>
 
-      <div className={styles.field}>
-        <label>Категорія:</label>
+      <div className={styles.group}>
+        <div className={styles.icon}>
+          <BiCategory size={20} />
+        </div>
         <input
           type="text"
+          name="category"
+          placeholder="Категорія (наприклад, Свіже м'ясо)"
+          className={styles.input}
           value={formData.category}
-          onChange={(e) =>
-            setFormData({ ...formData, category: e.target.value })
-          }
+          onChange={(e) => handleFieldChange("category", e.target.value)}
           required
         />
       </div>
 
-      <div className={styles.field}>
-        <label>Фото:</label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={onImageUpload}
-          disabled={uploading}
-        />
-        {uploading && <span className={styles.uploading}> Завантаження...</span>}
-        {formData.img && (
-          <div className={styles.currentImage}>
-            <span>Поточне: {formData.img}</span>
-            <button
-              type="button"
-              onClick={() => setFormData({ ...formData, img: "" })}
-              className={styles.deleteImageBtn}
-              title="Видалити фото"
-            >
-              🗑️
-            </button>
-          </div>
-        )}
+      <div className={styles.group}>
+        <div className={styles.download}>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={onImageUpload}
+            disabled={uploading}
+            className={styles.fileInput}
+          />
+          {uploading && <span className={styles.uploading}> Завантаження...</span>}
+          {formData.img && (
+            <div className={styles.currentImage}>
+              <span>{formData.img}</span>
+              <Button
+                title="Видалити фото"
+                type="button"
+                onClick={() => handleFieldChange("img", "")}
+                className={styles.delete}
+              >
+                <BiTrash size={18} />
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className={styles.actions}>
-        <button type="submit" disabled={loading}>
-          {loading ? "Збереження..." : "Зберегти"}
-        </button>
-        <button type="button" onClick={onCancel}>
+        <Button type="submit" disabled={loading}>
+          <BiSave size={20} /> {loading ? "Збереження..." : "Зберегти"}
+        </Button>
+        <Button type="button" onClick={onCancel} className={styles.cancel}>
           Скасувати
-        </button>
+        </Button>
       </div>
     </form>
   );

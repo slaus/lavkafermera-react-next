@@ -1,11 +1,12 @@
 ._ {
     border-radius   : 0.25rem;
-    font-weight     : 600;
+    font-weight     : 500;
     width           : 100%;
     display         : inline-flex;
     appearance      : none;
     align-items     : center;
     justify-content : center;
+    gap             : 10px;
     transition      : all 0.3s ease 0.3s;
     user-select     : none;
     position        : relative;
@@ -16,7 +17,7 @@
     height          : 40px;
     min-width       : 3rem;
     font-size       : 1rem;
-    background-color: #5e9923 !important;
+    background-color: #5e9923;
     color           : #fff;
     max-width       : fit-content;
     padding         : 0 20px;
@@ -25,9 +26,9 @@
 }
 
 ._:hover svg {
-    cursor          : pointer;
-    fill : #fff;
-    color: #fff;
+    cursor: pointer;
+    fill  : #fff;
+    color : #fff;
 }
 
 @media screen and (max-width: 991px) {
@@ -37,5 +38,5 @@
 }
 
 ._:hover {
-    background-color: #4c7c1b !important;
+    background-color: #4c7c1b;
 }

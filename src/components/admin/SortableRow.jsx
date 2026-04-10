@@ -1,14 +1,16 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import styles from "./SortableRow.module.css";
 import { BiEdit, BiTrash, BiCheck, BiImage } from "react-icons/bi";
-import Overlay from '@/components/others/Overlay';
-import Modal from '@/components/ui/Modal';
+import Overlay from "@/components/others/Overlay";
+import Modal from "@/components/ui/Modal";
+import { useAlert } from "@/context/AppContext";
 
 export default function SortableRow({ product, onEdit, onDelete }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { showAlert } = useAlert();
 
   const openModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -54,13 +56,28 @@ export default function SortableRow({ product, onEdit, onDelete }) {
         <td className={styles.cell}>{product.stock}</td>
         <td className={styles.cell}>{product.category}</td>
         <td className={styles.cell}>
-          {product.img ? <BiImage className={styles.img} size={24} onClick={() => product.img && openModal()} /> : ""}
+          {product.img ? (
+            <BiImage
+              className={styles.img}
+              size={24}
+              onClick={() => product.img && openModal()}
+            />
+          ) : (
+            ""
+          )}
         </td>
         <td className={styles.cell}>
           <a className={styles.edit} onClick={() => onEdit(product)}>
             <BiEdit size={18} />
           </a>
-          <a className={styles.delete} onClick={() => onDelete(product.id)}>
+          <a
+            className={styles.delete}
+            onClick={async () => {
+              await onDelete(product.id).then(() => {
+                showAlert("Товар успішно видалено!", "error");
+              });
+            }}
+          >
             <BiTrash size={18} />
           </a>
         </td>
@@ -69,7 +86,11 @@ export default function SortableRow({ product, onEdit, onDelete }) {
       {isModalOpen && (
         <Overlay>
           <Modal setIsModalOpen={setIsModalOpen}>
-            <img alt={product.title} title={product.title} src={`/images/${product.img}`} />
+            <img
+              alt={product.title}
+              title={product.title}
+              src={`/images/${product.img}`}
+            />
           </Modal>
         </Overlay>
       )}

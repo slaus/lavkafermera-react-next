@@ -53,6 +53,7 @@
     background-color: #fff !important;
     z-index         : 1;
     cursor          : pointer;
+    border-width    : 0;
 }
 
 .content {

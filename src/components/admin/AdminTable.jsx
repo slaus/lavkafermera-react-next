@@ -42,7 +42,7 @@ export default function AdminTable({ products, onEdit, onDelete, onDragEnd }) {
               <th>Ціна</th>
               <th>Акція</th>
               <th>Новинка</th>
-              <th>Залишок</th>
+              {/* <th>Залишок</th> */}
               <th>Категорія</th>
               <th>Фото</th>
               <th>Дії</th>

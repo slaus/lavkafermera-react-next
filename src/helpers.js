@@ -11,16 +11,16 @@ export const getFormValidations = () => {
         message: "Ім'я та прізвище обов'язкові",
       },
       maxLength: {
-        value: 20,
-        message: "Максимальна довжина 25 символів",
+        value: 30,
+        message: "Максимальна довжина 30 символів",
       },
       minLength: {
-        value: 3,
-        message: "Мінімальна довжина 6 символи",
+        value: 5,
+        message: "Мінімальна довжина 5 символів",
       },
       pattern: {
-        value: /^[A-Za-zА-Яа-яІіЇїЄє ]{6,25}$/,
-        message: "Неправильне повне ім'я",
+        value: /^[A-Za-zА-Яа-яІіЇїЄє]{2,}(?:\s+[A-Za-zА-Яа-яІіЇїЄє]{2,})+$/,
+        message: "Введіть ім'я та прізвище через пробіл",
       },
     },
     phone: {
@@ -29,16 +29,19 @@ export const getFormValidations = () => {
         message: "Номер телефону обов'язковий",
       },
       maxLength: {
-        value: 20,
-        message: "Максимальна довжина 20 символів",
+        value: 13,
+        message: "Максимальна довжина 13 символів",
       },
       minLength: {
-        value: 5,
-        message: "Мінімальна довжина 9 символів",
+        value: 13,
+        message: "Мінімальна довжина 13 символів",
       },
-      pattern: {
-        value: /^[0-9]{9,20}$/,
-        message: "Неправильний номер телефон",
+      phone: {
+        required: { value: true, message: "Номер телефону обов'язковий" },
+        pattern: {
+          value: /^\+380\d{9}$/,
+          message: "Номер має бути у форматі +38XXXXXXXXXX",
+        },
       },
     },
     address: {
@@ -159,7 +162,7 @@ export async function sendTelegramOrder(orderData) {
 📅 *Дата:* ${formattedDate}
 🛒 *Замовлення:* ${ID}
 👤 *Клієнт:* ${name}
-📞 *Телефон:* [${phone}](tel:${phone})
+📞 *Телефон:* ${phone}
 ${withDelivery ? `🏠 *Нова Пошта:* ${address} склад\n🏙 *Місто:* ${city}\n⚓ *Область, район:* ${schedule}` : ''}
 ${comment ? `💬 *Коментар:* ${comment}` : ''}
 

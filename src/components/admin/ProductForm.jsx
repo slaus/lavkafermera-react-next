@@ -26,6 +26,7 @@ export default function ProductForm({
 }) {
   const [loading, setLoading] = useState(false);
   const [checked, setChecked] = useState(formData.new);
+  const [submitted, setSubmitted] = useState(false);
   const { showAlert } = useAlert();
 
   useEffect(() => {
@@ -40,14 +41,30 @@ export default function ProductForm({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitted(true);
+
+    let hasError = false;
+
+    if (editingId === "new" && (!formData.id || formData.id.trim() === "")) hasError = true;
+    if (!formData.title || formData.title.trim() === "") hasError = true;
+    if (formData.price === undefined || formData.price === "" || formData.price <= 0) hasError = true;
+    if (!formData.category || formData.category.trim() === "") hasError = true;
+    if (formData.offerPrice && formData.price && formData.offerPrice > formData.price) hasError = true;
+
+    if (hasError) return;
+
     setLoading(true);
     await onSave();
-    showAlert("Товар успішно додано!", "success");
+    showAlert(
+      editingId === "new" ? "Товар успішно додано!" : "Товар успішно оновлено!",
+      "success"
+    );
     setLoading(false);
   };
 
   const handleFieldChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
+    if (submitted && (field === 'id' || field === 'title' || field === 'price' || field === 'category')) {}
   };
 
   return (
@@ -61,7 +78,7 @@ export default function ProductForm({
         <SliderCheckbox checked={checked} toggleChecked={toggleChecked} />
       </div>
       
-      <div className={styles.group}>
+      <div className={`${styles.group} ${submitted && editingId === "new" && (!formData.id || formData.id.trim() === "") ? styles.err : ""}`}>
         <div className={`${styles.icon} ${editingId !== "new" ? styles.gray : ""}`}>
           <BiIdCard size={20} />
         </div>
@@ -73,11 +90,13 @@ export default function ProductForm({
           value={formData.id}
           onChange={(e) => handleFieldChange("id", e.target.value)}
           disabled={editingId !== "new"}
-          required
         />
+        {submitted && editingId === "new" && (!formData.id || formData.id.trim() === "") && (
+          <p className={styles.error}>ID обов'язковий</p>
+        )}
       </div>
 
-      <div className={styles.group}>
+      <div className={`${styles.group} ${submitted && (!formData.title || formData.title.trim() === "") ? styles.err : ""}`}>
         <div className={styles.icon}>
           <BiRename size={20} />
         </div>
@@ -88,11 +107,13 @@ export default function ProductForm({
           className={styles.input}
           value={formData.title}
           onChange={(e) => handleFieldChange("title", e.target.value)}
-          required
         />
+        {submitted && (!formData.title || formData.title.trim() === "") && (
+          <p className={styles.error}>Назва обов'язкова</p>
+        )}
       </div>
 
-      <div className={styles.group}>
+      <div className={`${styles.group} ${submitted && (formData.price === undefined || formData.price === "" || formData.price <= 0) ? styles.err : ""}`}>
         <div className={styles.icon}>
           <BiMoney size={20} />
         </div>
@@ -101,29 +122,47 @@ export default function ProductForm({
           name="price"
           placeholder="Ціна (грн.)"
           className={styles.input}
-          value={formData.price}
-          onChange={(e) =>
-            handleFieldChange("price", e.target.valueAsNumber || 0)
-          }
-          required
+          value={formData.price === 0 ? "" : formData.price}
+          onChange={(e) => {
+            const val = e.target.value === "" ? 0 : parseFloat(e.target.value);
+            handleFieldChange("price", val);
+          }}
         />
+        {submitted && (formData.price === undefined || formData.price === "" || formData.price <= 0) && (
+          <p className={styles.error}>Напишіть ціну товару</p>
+        )}
       </div>
 
-      <div className={styles.group}>
+      <div className={`${styles.group} ${(formData.offerPrice && formData.price && formData.offerPrice > formData.price) ? styles.err : ""}`}>
         <div className={styles.icon}>
           <BiMoneyWithdraw size={20} />
         </div>
         <input
           type="number"
           name="offerPrice"
-          placeholder="Акційна ціна (грн.)"
+          placeholder="Акційна ціна (грн.) – залиште порожнім, якщо немає"
           className={styles.input}
-          value={formData.offerPrice}
-          onChange={(e) => handleFieldChange("offerPrice", e.target.value)}
+          value={formData.offerPrice || ""}
+          onChange={(e) => {
+            const rawValue = e.target.value;
+            if (rawValue === "") {
+              handleFieldChange("offerPrice", "");
+              return;
+            }
+            const val = parseFloat(rawValue);
+            if (isNaN(val)) {
+              handleFieldChange("offerPrice", "");
+            } else {
+              handleFieldChange("offerPrice", val);
+            }
+          }}
         />
+        {formData.offerPrice && formData.price && formData.offerPrice > formData.price && (
+          <p className={styles.error}>Акційна ціна не може перевищувати звичайну!</p>
+        )}
       </div>
 
-      <div className={styles.group}>
+      {/* <div className={styles.group}>
         <div className={styles.icon}>
           <BiPackage size={20} />
         </div>
@@ -132,14 +171,14 @@ export default function ProductForm({
           name="stock"
           placeholder="Кількість на складі"
           className={styles.input}
-          value={formData.stock}
+          value={formData.stock || ""}
           onChange={(e) =>
-            handleFieldChange("stock", e.target.valueAsNumber || 0)
+            handleFieldChange("stock", e.target.valueAsNumber)
           }
         />
-      </div>
+      </div> */}
 
-      <div className={styles.group}>
+      <div className={`${styles.group} ${submitted && (!formData.category || formData.category.trim() === "") ? styles.err : ""}`}>
         <div className={styles.icon}>
           <BiCategory size={20} />
         </div>
@@ -150,8 +189,10 @@ export default function ProductForm({
           className={styles.input}
           value={formData.category}
           onChange={(e) => handleFieldChange("category", e.target.value)}
-          required
         />
+        {submitted && (!formData.category || formData.category.trim() === "") && (
+          <p className={styles.error}>Категорія обов'язкова</p>
+        )}
       </div>
 
       <div className={styles.group}>

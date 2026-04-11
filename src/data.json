@@ -5,7 +5,6 @@
     "price": 460,
     "offerPrice": "",
     "new": false,
-    "stock": 12,
     "img": "tushki-molodikh-perepeliv-1.jpg",
     "category": "Свіже м’ясо"
   },
@@ -15,7 +14,6 @@
     "price": 485,
     "offerPrice": "",
     "new": false,
-    "stock": 12,
     "img": "tushki-perepeliv-faraon.jpg",
     "category": "Свіже м’ясо"
   },
@@ -24,7 +22,6 @@
     "title": "Перепілка на бульйон 2кг (10-11 тушок)",
     "price": 300,
     "new": false,
-    "stock": 12,
     "img": "buljonna-perepilka.jpg",
     "category": "Свіже м’ясо"
   },
@@ -34,7 +31,6 @@
     "price": 290,
     "offerPrice": "",
     "new": false,
-    "stock": 12,
     "img": "tushki-molodikh-perepeliv.jpg",
     "category": "Свіже м’ясо"
   },
@@ -44,7 +40,6 @@
     "price": 210,
     "offerPrice": "",
     "new": false,
-    "stock": 12,
     "img": "buljonna-perepilka-1.jpg",
     "category": "Заморожена продукція"
   },
@@ -54,7 +49,6 @@
     "price": 290,
     "offerPrice": "",
     "new": false,
-    "stock": 12,
     "img": "tushki-perepeliv-faraon-1.jpg",
     "category": "Заморожена продукція"
   },
@@ -64,7 +58,6 @@
     "price": 265,
     "offerPrice": "",
     "new": false,
-    "stock": 12,
     "img": "tushki-molodikh-perepeliv.jpg",
     "category": "Заморожена продукція"
   },
@@ -74,7 +67,6 @@
     "price": 50,
     "offerPrice": "",
     "new": false,
-    "stock": 12,
     "img": "yajcya-perepelini.jpg",
     "category": "Перепелині яйця"
   },
@@ -84,7 +76,6 @@
     "price": 300,
     "offerPrice": 270,
     "new": false,
-    "stock": 12,
     "img": "yajcya-perepelini-3.jpg",
     "category": "Перепелині яйця"
   },
@@ -94,7 +85,6 @@
     "price": 105,
     "offerPrice": "",
     "new": false,
-    "stock": 12,
     "img": "farsh-perepelyachij.jpg",
     "category": "Перепелячий фарш"
   },
@@ -104,7 +94,6 @@
     "price": 210,
     "offerPrice": 200,
     "new": false,
-    "stock": 12,
     "img": "farsh-perepelyachij-1.jpg",
     "category": "Перепелячий фарш"
   },
@@ -114,7 +103,6 @@
     "price": 140,
     "offerPrice": "",
     "new": false,
-    "stock": 12,
     "img": "subprodukti-perepelini.jpg",
     "category": "Субпродукти"
   },
@@ -124,7 +112,6 @@
     "price": 170,
     "offerPrice": "",
     "new": false,
-    "stock": 12,
     "img": "kopcheni-perepela.jpg",
     "category": "Готова продукція"
   },
@@ -134,7 +121,6 @@
     "price": 340,
     "offerPrice": 330,
     "new": false,
-    "stock": 12,
     "img": "kopcheni-perepela-1.jpg",
     "category": "Готова продукція"
   },
@@ -144,7 +130,6 @@
     "price": 135,
     "offerPrice": "",
     "new": false,
-    "stock": 12,
     "img": "perepeli-tushkovani.jpg",
     "category": "Готова продукція"
   },
@@ -154,7 +139,6 @@
     "price": 75,
     "offerPrice": "",
     "new": true,
-    "stock": 12,
     "img": "",
     "category": "Готова продукція"
   }

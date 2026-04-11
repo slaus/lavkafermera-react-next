@@ -23,7 +23,7 @@ const CartItem = ({ item }) => {
     <>
       <div className={styles._}>
         <div className={styles.img}>
-          <img alt={title} src={`/images/${img}`} className={styles.pict} />
+          <img alt={title} src={`/images/${img || 'no-photo.jpg'}`} className={styles.pict} />
         </div>
         <div className={styles.block}>
           <p className={styles.title}>{title}</p>

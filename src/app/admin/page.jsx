@@ -185,7 +185,7 @@ function AdminContent() {
   return (
     <>
       <h1>Адмінка товарів</h1>
-      <Button type="button" onClick={openModalForAdd}><BiPlus size={22} /> Додати товар</Button>
+      <Button type="button" onClick={openModalForAdd}><BiPlus size={18} /> Додати товар</Button>
 
       {loading ? (
         <Loading />

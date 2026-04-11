@@ -53,7 +53,7 @@ export default function SortableRow({ product, onEdit, onDelete }) {
         <td className={styles.cell}>
           {product.new ? <BiCheck className={styles.ok} size={24} /> : ""}
         </td>
-        <td className={styles.cell}>{product.stock}</td>
+        {/* <td className={styles.cell}>{product.stock}</td> */}
         <td className={styles.cell}>{product.category}</td>
         <td className={styles.cell}>
           {product.img ? (

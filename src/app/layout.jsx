@@ -3,6 +3,7 @@ import "./globals.css";
 import Providers from "./providers";
 import { metadata, viewport } from "./metadata";
 import { AppProviders } from "@/context/AppContext";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 
 const inter = Inter({ subsets: ["cyrillic"] });
@@ -12,7 +13,6 @@ const phone = process.env.NEXT_PUBLIC_PHONE;
 const facebook = process.env.NEXT_PUBLIC_FACEBOOK_URL;
 const instagram = process.env.NEXT_PUBLIC_INSTAGRAM_URL;
 
-// Экспортируем метаданные (теперь они будут автоматически в <head>)
 export { metadata, viewport };
 
 export default function RootLayout({ children }) {
@@ -40,8 +40,11 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <Providers>
-          <AppProviders>{children}</AppProviders>
+          <AppProviders>
+            {children}
+          </AppProviders>
         </Providers>
+        <SpeedInsights />
       </body>
     </html>
   );

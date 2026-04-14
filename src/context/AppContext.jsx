@@ -23,7 +23,7 @@ const FormStateContext = createContext();
 const AlertContext = createContext();
 const SearchContext = createContext();
 
-// Custom hooks for accessing contexts
+// Custom hooks
 export const useItems = () => useContext(ItemsContext);
 export const useSelectedCategory = () => useContext(SelectedCategoryContext);
 export const useItemsSort = () => useContext(ItemsSortContext);
@@ -128,7 +128,6 @@ export const useOrderDetails = () => {
   const { deliveryFee } = useDeliveryFee();
   const { formState } = useFormState();
 
-  // Calculating order details
   const orderDetails = useMemo(() => {
     const cartItems = Object.values(goodsInCart);
     const subTotal = cartTotal;
@@ -148,19 +147,43 @@ export const useOrderDetails = () => {
   return orderDetails;
 };
 
-// AppProviders component to provide all contexts
+// AppProviders component
 export const AppProviders = ({ children }) => {
   const [items, setItems] = useState([]);
   const [loadingItems, setLoadingItems] = useState(true);
 
-  useEffect(() => {
-    fetch("/api/products")
+  // Функція завантаження товарів
+  const loadProducts = useCallback(() => {
+    setLoadingItems(true);
+    fetch(`/api/products?_=${Date.now()}`, { cache: "no-store" })
       .then((res) => res.json())
-      .then(setItems)
-      .catch(console.error)
-      .finally(() => setLoadingItems(false));
+      .then((data) => {
+        setItems(data);
+        setLoadingItems(false);
+      })
+      .catch((err) => {
+        console.error("Failed to load products", err);
+        setLoadingItems(false);
+      });
   }, []);
-  
+
+  // Первинне завантаження
+  useEffect(() => {
+    loadProducts();
+  }, [loadProducts]);
+
+  // Слухаємо подію 'storage' для оновлення каталогу з інших вкладок (адмінки)
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === "products_last_update") {
+        loadProducts();
+      }
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, [loadProducts]);
+
+  // Інші стани
   const [selectedCategory, setSelectedCategory] = useState("");
   const [itemsSort, setItemsSort] = useState([
     "Замовчуванням",
@@ -173,7 +196,7 @@ export const AppProviders = ({ children }) => {
   ]);
   const [sort, setSort] = useState("Замовчуванням");
 
-  // Завантаження кошика з localStorage (лише goodsInCart та delivery)
+  // Кошик
   const [goodsInCart, setGoodsInCart] = useState(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("lavka_cart");
@@ -204,12 +227,10 @@ export const AppProviders = ({ children }) => {
     return false;
   });
 
-  // Похідні стани: кількість унікальних товарів, загальна кількість одиниць, загальна сума
   const [qtySelectedItems, setQtySelectedItems] = useState(0);
   const [cartLength, setCartLength] = useState(0);
   const [cartTotal, setCartTotal] = useState(0);
 
-  // Функція перерахунку похідних величин на основі вмісту кошика
   const recalcCartDerivatives = useCallback((cart) => {
     const itemsArray = Object.values(cart);
     const uniqueCount = itemsArray.length;
@@ -226,12 +247,10 @@ export const AppProviders = ({ children }) => {
     setCartTotal(totalSum);
   }, []);
 
-  // При зміні вмісту кошика перераховуємо похідні
   useEffect(() => {
     recalcCartDerivatives(goodsInCart);
   }, [goodsInCart, recalcCartDerivatives]);
 
-  // Зберігаємо goodsInCart та delivery у localStorage при кожній зміні
   useEffect(() => {
     if (typeof window !== "undefined") {
       const toSave = {
@@ -242,7 +261,6 @@ export const AppProviders = ({ children }) => {
     }
   }, [goodsInCart, delivery]);
 
-  // Інші стани (не зберігаються в localStorage)
   const [deliveryFee, setDeliveryFee] = useState(80);
   const [formState, setFormState] = useState({});
   const [alert, setAlert] = useState(null);
@@ -255,7 +273,7 @@ export const AppProviders = ({ children }) => {
 
   return (
     <AlertContext.Provider value={{ alert, showAlert }}>
-      <ItemsContext.Provider value={{ items, setItems }}>
+      <ItemsContext.Provider value={{ items, setItems, loadingItems }}>
         <SelectedCategoryContext.Provider
           value={{ selectedCategory, setSelectedCategory }}
         >

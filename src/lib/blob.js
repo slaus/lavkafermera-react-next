@@ -1,18 +1,28 @@
 import { put, list, del, head } from '@vercel/blob';
 
-// Ключі для Blob
 const DATA_FILE_KEY = 'json/data.json';
 const IMAGES_PREFIX = 'images/';
 
-/**
- * Отримати всі продукти з Blob
- * @returns {Promise<Array>}
- */
-export async function getProducts() {
+const getDataFileUrl = async () => {
+  if (process.env.NEXT_PUBLIC_BLOB_DATA_URL) {
+    return process.env.NEXT_PUBLIC_BLOB_DATA_URL;
+  }
+
   try {
     const { url } = await head(DATA_FILE_KEY);
-    const res = await fetch(url);
-    const products = await res.json();
+    return url;
+  } catch (error) {
+    console.error('Failed to get data file URL from Blob', error);
+    throw new Error('BLOB_DATA_URL not configured and head failed');
+  }
+};
+
+export async function getProducts() {
+  try {
+    const url = await getDataFileUrl();
+    const response = await fetch(url, { cache: 'no-store' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const products = await response.json();
     return products;
   } catch (error) {
     console.error('Помилка читання data.json з Blob:', error);
@@ -20,10 +30,6 @@ export async function getProducts() {
   }
 }
 
-/**
- * Зберегти весь масив продуктів у Blob (перезапис)
- * @param {Array} products
- */
 export async function saveProducts(products) {
   const blob = await put(DATA_FILE_KEY, JSON.stringify(products, null, 2), {
     access: 'public',
@@ -33,35 +39,19 @@ export async function saveProducts(products) {
   return blob;
 }
 
-/**
- * Завантажити зображення в Blob (з форми)
- * @param {File} file - файл з <input type="file">
- * @returns {Promise<string>} - публічний URL зображення
- */
 export async function uploadImage(file) {
-  // Додаємо timestamp, щоб уникнути кешування і колізій
   const uniqueName = `${IMAGES_PREFIX}${Date.now()}-${file.name}`;
-  const blob = await put(uniqueName, file, {
-    access: 'public',
-  });
+  const blob = await put(uniqueName, file, { access: 'public' });
   return blob.url;
 }
 
-/**
- * Видалити зображення з Blob за його URL
- * @param {string} imageUrl
- */
 export async function deleteImageByUrl(imageUrl) {
   if (!imageUrl) return;
-  // Виділяємо ключ з URL (частину після .com/)
   const urlObj = new URL(imageUrl);
-  const key = urlObj.pathname.slice(1); // прибираємо перший слеш
+  const key = urlObj.pathname.slice(1);
   await del(key);
 }
 
-/**
- * Отримати список всіх зображень у Blob (для міграції або налагодження)
- */
 export async function listAllImages() {
   const blobs = await list({ prefix: IMAGES_PREFIX });
   return blobs.blobs;

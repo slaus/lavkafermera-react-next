@@ -42,25 +42,37 @@ function AdminContent() {
       return;
     }
 
-    fetch(`/api/admin?token=${token}`, { cache: 'no-store' })
+    fetch(`/api/admin?token=${token}`, { cache: "no-store" })
       .then((res) => {
-        if (res.status === 401) {
-          router.replace("/");
-          return;
-        }
+        console.log("Status:", res.status);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
       })
       .then((data) => {
-        if (data) {
-          setProducts(data);
-          setLoading(false);
-        }
+        console.log("Отримано товарів:", data?.length);
+        setProducts(data);
+        setLoading(false);
       })
-      .catch(() => router.replace("/"));
+      .catch((err) => {
+        console.error("Помилка завантаження:", err);
+        setLoading(false);
+      });
   }, [token, router]);
 
+  // Функція-помічник
+  const notifyCatalogUpdate = () => {
+    const timestamp = Date.now().toString();
+    localStorage.setItem("products_last_update", timestamp);
+    window.dispatchEvent(
+      new StorageEvent("storage", {
+        key: "products_last_update",
+        newValue: timestamp,
+      }),
+    );
+  };
+
   const refreshProducts = async () => {
-    const res = await fetch(`/api/admin?token=${token}`, { cache: 'no-store' });
+    const res = await fetch(`/api/admin?token=${token}`, { cache: "no-store" });
     const data = await res.json();
     setProducts(data);
   };
@@ -74,6 +86,7 @@ function AdminContent() {
       setProducts(newProducts);
       saveOrder(newProducts);
       await refreshProducts();
+      notifyCatalogUpdate();
     }
   };
 
@@ -85,6 +98,8 @@ function AdminContent() {
     });
     if (!res.ok) {
       alert("Не вдалося зберегти порядок товарів");
+    } else {
+      notifyCatalogUpdate();
     }
   };
 
@@ -126,6 +141,7 @@ function AdminContent() {
     if (res.ok) {
       setProducts(products.filter((p) => p.id !== id));
       await refreshProducts();
+      notifyCatalogUpdate();
     } else {
       alert("Помилка видалення");
     }
@@ -159,6 +175,7 @@ function AdminContent() {
         const saved = await res.json();
         setProducts([...products, saved]);
         await refreshProducts();
+        notifyCatalogUpdate();
         closeModal();
       } else {
         const err = await res.text();
@@ -175,6 +192,7 @@ function AdminContent() {
         try {
           updated = await res.json();
           await refreshProducts();
+          notifyCatalogUpdate();
         } catch (e) {
           console.error("Помилка парсингу JSON", e);
           alert("Помилка: некоректна відповідь сервера");

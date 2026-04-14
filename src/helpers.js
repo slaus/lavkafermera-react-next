@@ -155,7 +155,7 @@ export async function sendTelegramOrder(orderData) {
   let cartList = '';
   Object.values(cartItems).forEach((item) => {
     const itemTotal = (item.offerPrice ? item.offerPrice * item.qty : item.price * item.qty).toFixed(0);
-    cartList += `\n- (${item.qty}) ${item.title} --> ${itemTotal} грн.`;
+    cartList += `\n- ${item.title} --> ${itemTotal} грн. *(${item.qty} шт.)*`;
   });
 
   const message = `

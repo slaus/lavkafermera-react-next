@@ -28,6 +28,10 @@
     object-fit: cover;
 }
 
+.pict.hidden {
+    filter: grayscale(1);
+}
+
 .block {
     width        : 90%;
     margin-top   : 0.75rem;
@@ -111,4 +115,18 @@
     display        : flex;
     justify-content: center;
     align-items    : center;
+}
+
+.empty {
+    font-size  : 1.1rem;
+    line-height: 120%;
+    text-align: center;
+    font-weight: 600;
+    color      : #4c7c1b;
+}
+
+@media screen and (max-width: 991px) {
+    .empty {
+        font-size: .9rem;
+    }
 }

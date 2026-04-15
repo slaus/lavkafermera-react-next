@@ -68,6 +68,15 @@
     color: #5e9923;
 }
 
+.hide {
+  color: #ff0019;
+}
+
+.hide svg {
+    color: #ff0019;
+    fill : #ff0019;
+}
+
 .action {
     color: #ff0019;
 }

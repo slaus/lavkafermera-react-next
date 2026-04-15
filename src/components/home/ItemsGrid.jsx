@@ -11,17 +11,17 @@ import {
 } from "@/context/AppContext";
 
 const ItemsGrid = () => {
-  const { items, loadingItems } = useItems(); // отримуємо loadingItems
+  const { items, loadingItems } = useItems();
   const { sort } = useSort();
   const { selectedCategory } = useSelectedCategory();
   const { searchValue } = useSearch();
 
-  // Показуємо індикатор завантаження, поки дані не завантажились
   if (loadingItems) {
     return <Loading />;
   }
 
   const filteredItems = items
+    // .filter((item) => (item.visible !== undefined ? item.visible : true))
     .filter((item) => !selectedCategory || item.category === selectedCategory)
     .filter((item) =>
       item.title.toLowerCase().includes(searchValue.toLowerCase())

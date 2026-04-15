@@ -32,6 +32,7 @@ function AdminContent() {
     stock: 0,
     img: "",
     category: "",
+    visible: true,
   });
   const [uploading, setUploading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -114,19 +115,21 @@ function AdminContent() {
       stock: 0,
       img: "",
       category: "",
+      visible: true,
     });
     setIsModalOpen(true);
   };
 
   const openModalForEdit = (product) => {
-    setEditingId(product.id);
-    setFormData({
-      ...product,
-      offerPrice: product.offerPrice || "",
-      new: product.new || false,
-    });
-    setIsModalOpen(true);
-  };
+  setEditingId(product.id);
+  setFormData({
+    ...product,
+    offerPrice: product.offerPrice || "",
+    new: product.new || false,
+    visible: product.visible !== undefined ? product.visible : true,
+  });
+  setIsModalOpen(true);
+};
 
   const closeModal = () => {
     setIsModalOpen(false);

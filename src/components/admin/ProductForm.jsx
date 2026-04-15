@@ -12,6 +12,8 @@ import {
   BiCategory,
   BiPackage,
   BiMoneyWithdraw,
+  BiShow,
+  BiHide,
 } from "react-icons/bi";
 import SliderCheckbox from "@/components/ui/SliderCheckbox";
 
@@ -25,18 +27,29 @@ export default function ProductForm({
   onImageUpload,
 }) {
   const [loading, setLoading] = useState(false);
-  const [checked, setChecked] = useState(formData.new);
+  const [checkedNew, setCheckedNew] = useState(formData.new);
+  const [checkedVisible, setCheckedVisible] = useState(formData.visible !== undefined ? formData.visible : true);
   const [submitted, setSubmitted] = useState(false);
   const { showAlert } = useAlert();
 
   useEffect(() => {
-    setChecked(formData.new);
+    setCheckedNew(formData.new);
   }, [formData.new]);
 
-  const toggleChecked = () => {
-    const newChecked = !checked;
-    setChecked(newChecked);
+  useEffect(() => {
+    setCheckedVisible(formData.visible !== undefined ? formData.visible : true);
+  }, [formData.visible]);
+
+  const toggleNew = () => {
+    const newChecked = !checkedNew;
+    setCheckedNew(newChecked);
     setFormData({ ...formData, new: newChecked });
+  };
+
+  const toggleVisible = () => {
+    const newChecked = !checkedVisible;
+    setCheckedVisible(newChecked);
+    setFormData({ ...formData, visible: newChecked });
   };
 
   const handleSubmit = async (e) => {
@@ -44,7 +57,6 @@ export default function ProductForm({
     setSubmitted(true);
 
     let hasError = false;
-
     if (editingId === "new" && (!formData.id || formData.id.trim() === "")) hasError = true;
     if (!formData.title || formData.title.trim() === "") hasError = true;
     if (formData.price === undefined || formData.price === "" || formData.price <= 0) hasError = true;
@@ -64,7 +76,6 @@ export default function ProductForm({
 
   const handleFieldChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
-    if (submitted && (field === 'id' || field === 'title' || field === 'price' || field === 'category')) {}
   };
 
   return (
@@ -74,8 +85,15 @@ export default function ProductForm({
       </h2>
 
       <div className={styles.checkbox}>
+        <div className={styles.label}>
+          Показувати на сайті?
+        </div>
+        <SliderCheckbox checked={checkedVisible} toggleChecked={toggleVisible} />
+      </div>
+
+      <div className={styles.checkbox}>
         <div className={styles.label}>Новинка?</div>
-        <SliderCheckbox checked={checked} toggleChecked={toggleChecked} />
+        <SliderCheckbox checked={checkedNew} toggleChecked={toggleNew} />
       </div>
       
       <div className={`${styles.group} ${submitted && editingId === "new" && (!formData.id || formData.id.trim() === "") ? styles.err : ""}`}>

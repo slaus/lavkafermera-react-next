@@ -128,7 +128,9 @@ export const useOrderDetails = () => {
   const orderDetails = useMemo(() => {
     const cartItems = Object.values(goodsInCart);
     const subTotal = cartTotal;
-    const shippingCost = delivery ? 130 : 80; // ✅ Kyiv = 80, Ukraine = 130
+    const deliveryKiev = parseInt(process.env.NEXT_PUBLIC_DELIVERY_KIEV, 10);
+    const deliveryUkraine = parseInt(process.env.NEXT_PUBLIC_DELIVERY_UKRAINE, 10);
+    const shippingCost = delivery ? deliveryUkraine : deliveryKiev; // ✅ Kyiv = 80, Ukraine = 130
     const total = subTotal + shippingCost;
 
     return {

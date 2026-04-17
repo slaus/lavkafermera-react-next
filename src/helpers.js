@@ -126,7 +126,7 @@ export const getFormValidations = () => {
 export function getWspUrl(orderData) {
   const N = process.env.NEXT_PUBLIC_MY_PHONE_NUMBER;
   const ID = nanoid(8);
-  const { cartItems, subTotal, withDelivery, shippingCost, total, formData } = orderData;
+  const { cartItems, subTotal, withDelivery, shippingCost, packingCost, total, formData } = orderData;
   const { name, phone, kiev, address, city, schedule, comment } = formData;
 
   // Поточна дата у форматі "09.04.2025, 14:10"
@@ -153,9 +153,10 @@ export function getWspUrl(orderData) {
     deliveryInfo = `%0A%0A%2AНова Пошта%3A%2A%20${address} склад%0A%0A%2AМісто%3A%2A%20${city}%0A%0A%2AОбласть, район%3A%2A%20${schedule}`;
   }
 
+  const packingText = withDelivery ? `%0A%0A%2AПакування%3A%2A%20${packingCost} грн.` : "";
   const commentText = comment ? `%0A%0A%2AКоментар%3A%2A%20${comment}` : "";
 
-  const WSP_URL = `https://web.whatsapp.com/send/?phone=${N}&text=%2AДата%3A%2A%20${formattedDate}%0A%0A%2AЗамовлення%3A%2A%20${ID}%0A%0A%2AКлієнт%3A%2A%20${name}%0A%0A%2AТелефон%3A%2A%20${phone}${deliveryInfo}${commentText}%0A%0A%2AСписок замовлення%3A%2A${cartListforUrl}%0A%0A%2AПідсумок%3A%2A%20${subTotal} грн.%0A%0A%2AВартість доставки%3A%2A%20${shippingCost} грн.%0A%0A%2AЗагальна сума%3A%2A%20${total} грн.`;
+  const WSP_URL = `https://web.whatsapp.com/send/?phone=${N}&text=%2AДата%3A%2A%20${formattedDate}%0A%0A%2AЗамовлення%3A%2A%20${ID}%0A%0A%2AКлієнт%3A%2A%20${name}%0A%0A%2AТелефон%3A%2A%20${phone}${deliveryInfo}${commentText}%0A%0A%2AСписок замовлення%3A%2A${cartListforUrl}%0A%0A%2AПідсумок%3A%2A%20${subTotal} грн.%0A%0A%2AВартість доставки%3A%2A%20від ${shippingCost} грн.${packingText}%0A%0A%2AЗагальна сума%3A%2A%20${total} грн.`;
 
   return WSP_URL;
 }
@@ -166,7 +167,7 @@ export async function sendTelegramOrder(orderData) {
   const BOT_TOKEN = process.env.NEXT_PUBLIC_MY_TELEGRAM_BOT_TOKEN;
   const CHAT_ID = process.env.NEXT_PUBLIC_MY_TELEGRAM_CHAT_ID;
   const ID = nanoid(8);
-  const { cartItems, subTotal, withDelivery, shippingCost, total, formData } = orderData;
+  const { cartItems, subTotal, withDelivery, shippingCost, packingCost, total, formData } = orderData;
   const { name, phone, kiev, address, city, schedule, comment } = formData;
 
   const now = new Date();
@@ -195,7 +196,7 @@ ${comment ? `💬 *Коментар:* ${comment}` : ''}
 🧾 *Список замовлення:* ${cartList}
 
 💰 *Підсумок:* ${subTotal} грн.
-🚚 *Вартість доставки:* ${!withDelivery ? 80 : 130} грн.
+${withDelivery ? `📦 *Пакування:* ${packingCost} грн.\n` : ''}🚚 *Вартість доставки:* від ${shippingCost} грн.
 💵 *Загальна сума:* ${total} грн.
   `;
 

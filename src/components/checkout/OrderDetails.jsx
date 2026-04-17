@@ -7,7 +7,7 @@ import {
 import OrderItem from "@/components/checkout/OrderItem";
 
 const OrderDetails = () => {
-  const { cartItems, subTotal, withDelivery, shippingCost, total } =
+  const { cartItems, subTotal, withDelivery, shippingCost, packingCost, total } =
     useOrderDetails();
   const { delivery, setDelivery } = useDelivery();
   // console.log("shipping cost " + shippingCost);
@@ -30,14 +30,20 @@ const OrderDetails = () => {
         </div>
         {!withDelivery ? (
           <div className={styles.item}>
-            <p>Доставка по Києву</p>
+            <p>Адресна доставка по Києву</p>
             <p className={styles.subtotal}>{shippingCost} грн.</p>
           </div>
         ) : (
-          <div className={styles.item}>
-            <p>Нова Пошта</p>
-            <p className={styles.subtotal}>{shippingCost} грн.</p>
-          </div>
+          <>
+            <div className={styles.item}>
+              <p>Пакування замовлення</p>
+              <p className={styles.subtotal}>{packingCost} грн.</p>
+            </div>
+            <div className={styles.item}>
+              <p>Нова Пошта, згідно тарифам</p>
+              <p className={styles.subtotal}><small>від</small> {shippingCost} грн.</p>
+            </div>
+          </>
         )}
         <div className={styles.item}>
           <p>

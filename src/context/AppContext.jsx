@@ -130,14 +130,16 @@ export const useOrderDetails = () => {
     const subTotal = cartTotal;
     const deliveryKiev = parseInt(process.env.NEXT_PUBLIC_DELIVERY_KIEV, 10);
     const deliveryUkraine = parseInt(process.env.NEXT_PUBLIC_DELIVERY_UKRAINE, 10);
+    const packingCost = parseInt(process.env.NEXT_PUBLIC_DELIVERY_PACKING, 10);
     const shippingCost = delivery ? deliveryUkraine : deliveryKiev; // ✅ Kyiv = 80, Ukraine = 130
-    const total = subTotal + shippingCost;
+    const total = subTotal + shippingCost + (delivery ? packingCost : 0);
 
     return {
       cartItems,
       subTotal: subTotal.toFixed(0),
       withDelivery: delivery,
       shippingCost: shippingCost.toFixed(0),
+      packingCost: packingCost.toFixed(0),
       total: total.toFixed(0),
       formData: formState,
     };

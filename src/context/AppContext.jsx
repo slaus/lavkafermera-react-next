@@ -18,7 +18,6 @@ const GoodsInCartContext = createContext();
 const CartLengthContext = createContext();
 const CartTotalContext = createContext();
 const DeliveryContext = createContext();
-const DeliveryFeeContext = createContext();
 const FormStateContext = createContext();
 const AlertContext = createContext();
 const SearchContext = createContext();
@@ -33,7 +32,6 @@ export const useGoodsInCart = () => useContext(GoodsInCartContext);
 export const useCartLength = () => useContext(CartLengthContext);
 export const useCartTotal = () => useContext(CartTotalContext);
 export const useDelivery = () => useContext(DeliveryContext);
-export const useDeliveryFee = () => useContext(DeliveryFeeContext);
 export const useFormState = () => useContext(FormStateContext);
 export const useAlert = () => useContext(AlertContext);
 export const useSearch = () => useContext(SearchContext);
@@ -125,13 +123,12 @@ export const useOrderDetails = () => {
   const { goodsInCart } = useGoodsInCart();
   const { cartTotal } = useCartTotal();
   const { delivery } = useDelivery();
-  const { deliveryFee } = useDeliveryFee();
   const { formState } = useFormState();
 
   const orderDetails = useMemo(() => {
     const cartItems = Object.values(goodsInCart);
     const subTotal = cartTotal;
-    const shippingCost = delivery ? deliveryFee : 0;
+    const shippingCost = delivery ? 130 : 80; // ✅ Kyiv = 80, Ukraine = 130
     const total = subTotal + shippingCost;
 
     return {
@@ -142,7 +139,7 @@ export const useOrderDetails = () => {
       total: total.toFixed(0),
       formData: formState,
     };
-  }, [goodsInCart, cartTotal, delivery, deliveryFee, formState]);
+  }, [goodsInCart, cartTotal, delivery, formState]);
 
   return orderDetails;
 };
@@ -294,19 +291,15 @@ export const AppProviders = ({ children }) => {
                       <DeliveryContext.Provider
                         value={{ delivery, setDelivery }}
                       >
-                        <DeliveryFeeContext.Provider
-                          value={{ deliveryFee, setDeliveryFee }}
+                        <FormStateContext.Provider
+                          value={{ formState, setFormState }}
                         >
-                          <FormStateContext.Provider
-                            value={{ formState, setFormState }}
+                          <SearchContext.Provider
+                            value={{ searchValue, setSearchValue }}
                           >
-                            <SearchContext.Provider
-                              value={{ searchValue, setSearchValue }}
-                            >
-                              {children}
-                            </SearchContext.Provider>
-                          </FormStateContext.Provider>
-                        </DeliveryFeeContext.Provider>
+                            {children}
+                          </SearchContext.Provider>
+                        </FormStateContext.Provider>
                       </DeliveryContext.Provider>
                     </CartTotalContext.Provider>
                   </CartLengthContext.Provider>

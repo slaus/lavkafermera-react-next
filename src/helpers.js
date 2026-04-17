@@ -19,7 +19,7 @@ export const getFormValidations = () => {
         message: "Мінімальна довжина 5 символів",
       },
       pattern: {
-        value: /^[A-Za-zА-Яа-яІіЇїЄє]{2,}(?:\s+[A-Za-zА-Яа-яІіЇїЄє]{2,})+$/,
+        value: /^[A-Za-zА-Яа-яІіЇїЄєҐґ']{2,}(?:\s+[A-Za-zА-Яа-яІіЇїЄєҐґ']{2,})+$/,
         message: "Введіть ім'я та прізвище через пробіл",
       },
     },
@@ -42,6 +42,24 @@ export const getFormValidations = () => {
           value: /^\+380\d{9}$/,
           message: "Номер має бути у форматі +38XXXXXXXXXX",
         },
+      },
+    },
+    kiev: {
+      required: {
+        value: true,
+        message: "Адреса у Києві обов'язкова",
+      },
+      maxLength: {
+        value: 100,
+        message: "Максимальна довжина 100 символів",
+      },
+      minLength: {
+        value: 4,
+        message: "Мінімальна довжина 4 символ",
+      },
+      pattern: {
+        value: /^[0-9a-zA-ZА-Яа-яІіЇїЄєҐґ.,' ]{4,100}$/,
+        message: "Неправильна адреса у Києві",
       },
     },
     address: {
@@ -76,7 +94,7 @@ export const getFormValidations = () => {
         message: "Мінімальна довжина 3 символи",
       },
       pattern: {
-        value: /^[A-Za-zА-Яа-яІіЇїЄє ]{3,20}$/,
+        value: /^[A-Za-zА-Яа-яІіЇїЄєҐґ.,' ]{3,20}$/,
         message: "Неправильне місто або селище",
       },
     },
@@ -90,7 +108,7 @@ export const getFormValidations = () => {
         message: "Максимальна довжина 20 символів",
       },
       pattern: {
-        value: /^[0-9a-zA-ZА-Яа-яІіЇїЄє ]{0,20}$/,
+        value: /^[0-9a-zA-ZА-Яа-яІіЇїЄєҐґ.,' ]{0,20}$/,
         message: "Неправильна область, район",
       },
     },
@@ -109,7 +127,7 @@ export function getWspUrl(orderData) {
   const N = process.env.NEXT_PUBLIC_MY_PHONE_NUMBER;
   const ID = nanoid(8);
   const { cartItems, subTotal, withDelivery, shippingCost, total, formData } = orderData;
-  const { name, phone, address, city, schedule, comment } = formData;
+  const { name, phone, kiev, address, city, schedule, comment } = formData;
 
   // Поточна дата у форматі "09.04.2025, 14:10"
   const now = new Date();
@@ -121,16 +139,23 @@ export function getWspUrl(orderData) {
   const formattedDate = `${day}.${month}.${year}, ${hours}:${minutes}`;
 
   let cartListforUrl = "";
-
   Object.values(cartItems).forEach((item) => {
     const itemTotal = (item.offerPrice ? item.offerPrice * item.qty : item.price * item.qty).toFixed(2);
     cartListforUrl += `%0A%0A - *(${item.qty})* ${item.title} --> _*${itemTotal} грн.*_`;
   });
 
-  const WSP_URL = `https://web.whatsapp.com/send/?phone=${N}&text=%2AДата%3A%2A%20${formattedDate}%0A%0A%2AЗамовлення%3A%2A%20${ID}%0A%0A%2AКлієнт%3A%2A%20${name}%0A%0A%2AТелефон%3A%2A%20${phone}%0A%0A%2A${withDelivery ? "Нова_Пошта" + "%3A%2A%20" + address + " склад %0A%0A%2A" : ""
-    }${withDelivery ? "Місто" + "%3A%2A%20" + city + "%0A%0A%2A" : ""}${withDelivery ? "Область_район" + "%3A%2A%20" + schedule + "%0A%0A%2A" : ""
-    }${comment ? "Коментар" + "%3A%2A%20" + comment + "%0A%0A%2A" : ""}${"Список_замовлення"}%3A%2A${cartListforUrl}%0A%0A%2A${withDelivery ? "Підсумок" + "%3A%2A%20" + subTotal + " грн.%0A%0A%2A" : ""
-    }${withDelivery ? "Вартість_доставки" + "%3A%2A%20" + shippingCost + " грн.%0A%0A%2A" : ""}${"Загальна_сума"}%3A%2A%20${total} грн.%0A%0A`;
+  let deliveryInfo = "";
+  if (!withDelivery) {
+    // Доставка по Києву
+    deliveryInfo = `%0A%0A%2AМісто%3A%2A%20Київ%0A%0A%2AАдреса%3A%2A%20${kiev}`;
+  } else {
+    // Доставка Новою Поштою
+    deliveryInfo = `%0A%0A%2AНова Пошта%3A%2A%20${address} склад%0A%0A%2AМісто%3A%2A%20${city}%0A%0A%2AОбласть, район%3A%2A%20${schedule}`;
+  }
+
+  const commentText = comment ? `%0A%0A%2AКоментар%3A%2A%20${comment}` : "";
+
+  const WSP_URL = `https://web.whatsapp.com/send/?phone=${N}&text=%2AДата%3A%2A%20${formattedDate}%0A%0A%2AЗамовлення%3A%2A%20${ID}%0A%0A%2AКлієнт%3A%2A%20${name}%0A%0A%2AТелефон%3A%2A%20${phone}${deliveryInfo}${commentText}%0A%0A%2AСписок замовлення%3A%2A${cartListforUrl}%0A%0A%2AПідсумок%3A%2A%20${subTotal} грн.%0A%0A%2AВартість доставки%3A%2A%20${shippingCost} грн.%0A%0A%2AЗагальна сума%3A%2A%20${total} грн.`;
 
   return WSP_URL;
 }
@@ -142,7 +167,7 @@ export async function sendTelegramOrder(orderData) {
   const CHAT_ID = process.env.NEXT_PUBLIC_MY_TELEGRAM_CHAT_ID;
   const ID = nanoid(8);
   const { cartItems, subTotal, withDelivery, shippingCost, total, formData } = orderData;
-  const { name, phone, address, city, schedule, comment } = formData;
+  const { name, phone, kiev, address, city, schedule, comment } = formData;
 
   const now = new Date();
   const day = String(now.getDate()).padStart(2, '0');
@@ -163,13 +188,14 @@ export async function sendTelegramOrder(orderData) {
 🛒 *Замовлення:* ${ID}
 👤 *Клієнт:* ${name}
 📞 *Телефон:* ${phone}
+${!withDelivery ? `🏙 *Місто:* Київ\n🏠 *Адреса:* ${kiev}` : ''}
 ${withDelivery ? `🏠 *Нова Пошта:* ${address} склад\n🏙 *Місто:* ${city}\n⚓ *Область, район:* ${schedule}` : ''}
 ${comment ? `💬 *Коментар:* ${comment}` : ''}
 
 🧾 *Список замовлення:* ${cartList}
 
 💰 *Підсумок:* ${subTotal} грн.
-🚚 *Вартість доставки:* ${withDelivery ? shippingCost : 0} грн.
+🚚 *Вартість доставки:* ${!withDelivery ? 80 : 130} грн.
 💵 *Загальна сума:* ${total} грн.
   `;
 

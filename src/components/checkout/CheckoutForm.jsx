@@ -94,8 +94,9 @@ const CheckoutForm = () => {
         <h3 className={styles.title}>Ваші дані</h3>
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.delivery}>
-            <div className={styles.label}>Доставка по Україні?</div>
+            <div className={`${styles.label} ${!delivery ? styles.active : ""}`}>Доставка по Києву</div>
             <SliderCheckbox checked={checked} toggleChecked={toggleChecked} />
+            <div className={`${styles.label} ${delivery ? styles.active : ""}`}>Доставка по Україні</div>
           </div>
 
           <div className={`${styles.group} ${errors?.name ? styles.err : ""} ${cartItems.length === 0 ? styles.disabled : ""}`}>
@@ -128,6 +129,21 @@ const CheckoutForm = () => {
             />
             {errors?.phone && <p className={styles.error}>{errors.phone.message}</p>}
           </div>
+
+          {!delivery && (
+            <div className={`${styles.group} ${errors?.kiev ? styles.err : ""}`}>
+                <div className={styles.icon}>
+                  <BiMap size={20} />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Адреса у Києві"
+                  className={styles.input}
+                  {...register("kiev", validations.kiev)}
+                />
+                {errors?.kiev && <p className={styles.error}>{errors.kiev.message}</p>}
+              </div>
+          )}
 
           {delivery && (
             <>
